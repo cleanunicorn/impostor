@@ -1,0 +1,14 @@
+[project]
+name = "impostor"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "click>=8.2.1",
+    "openai>=1.107.2",
+    "pocketflow>=0.0.3",
+    "pydantic>=2.11.9",
+    "python-dotenv>=1.1.1",
+    "ruff>=0.13.0",
+]
