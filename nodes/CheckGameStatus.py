@@ -22,9 +22,8 @@ class CheckGameStatus(Node):
         else:
             status = "continue_game"
 
+        print("=============================")
         print(f"Players: {[p['name'] for p in players if p['status'] == 'alive']}")
-        print(f"Impostors: {len(impostors)}")
-        print(f"Status: {status}")
 
         if len(impostors) == 0:
             return "crew_wins"
