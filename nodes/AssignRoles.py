@@ -18,7 +18,6 @@ class AssignRoles(Node):
         }
 
     def exec(self, data):
-        # Generate players named from A to Z
         player_count = data["player_count"]
         players = []
 

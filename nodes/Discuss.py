@@ -1,7 +1,7 @@
 from pocketflow import Node
 from pydantic import BaseModel
 from utils.call_llm import call_llm
-
+from textwrap import dedent
 
 class DiscussionResponse(BaseModel):
     message: str
@@ -29,57 +29,30 @@ class Discuss(Node):
         random.shuffle(alive_players)
 
         for p in alive_players:
-            system_prompt = f"""
-# Game Rules
-**Mafia / Werewolf Rules (Short & Clear)**
-
-* Players are secretly assigned roles: **Crew (villagers)** or **Impostors (mafia/werewolves)**.
-* The game alternates between **Night** and **Day** phases.
-
-  * **Night**: Impostors secretly choose one player to eliminate.
-  * **Day**: All alive players discuss and **vote to eliminate** one player, suspecting them to be an impostor.
-* Eliminated players reveal their roles and leave the game.
-* **Win conditions**:
-
-  * **Impostors win** if their number becomes **equal to or greater than** the number of crew.
-  * **Crew wins** if **all impostors are eliminated**.
-
-# Game Context
-Phase **Day**.
-Other alive players: {", ".join([pl["name"] for pl in alive_players if pl["name"] != p["name"]])}
-                
-            """
-
-            if len(current_discussion) > 0:
-                system_prompt += "# Ongoing discussion```\n"
-            for d in current_discussion:
-                system_prompt += f"{d['player']}: {d['message']}\n"
-
-            system_prompt += f"""```\n
-                You are {p["name"]}, a player in a game similar to Mafia or Werewolf. 
-            """
-
-            # You are currently {'an **Impostor**' if p['role'] == 'impostor' else 'a **Crew member**'}.
-            # You will never reveal your role if you are an Impostor.
+            system_prompt = dedent(f"""
+                Act like you are a player in a party game very similar to Mafia (also known as Werewolf).  
+                Your objective is to fully immerse yourself in the game role, simulate the thought process of a real player, and act accordingly. Be vivid, strategic, and dynamic in your reasoning.  
+                Keep your role hidden unless strategically beneficial.  
+                Justify your suspicions and decisions with clear reasoning, mimicking real human deduction and bluffing.  
+            """)
 
             response = call_llm(
-                prompt="""
-It is now daytime. Everyone wakes up.
-
-Goal: 
-Discuss and find who among you are the impostors.
-Rules:
-You may talk freely, share suspicions, defend yourself, or accuse others.
-Try to reason based on behavior, previous votes, and patterns.
-When discussion ends, you must vote to eliminate one player.
-The player with the most votes will be eliminated and reveal their role.
-After voting, the game will move to the night phase.
-
-Reminder: 
-If the number of impostors becomes equal to or greater than the number of crew, the impostors win. If all impostors are eliminated, the crew wins.
-What do you say next? Keep it brief. Persuade others to benefit your role.
-                """,
                 system_prompt=system_prompt,
+                prompt=f"""
+                    You are {p["name"]}, your role is {'impostor' if p['role'] == 'impostor' else 'crew'}.
+                    You may talk freely, share suspicions, defend yourself, or accuse others.
+                    All players alive: {", ".join([pl["name"] for pl in alive_players if pl["name"] != p["name"]])}.
+                    Convince the other players of your innocence if you are crew, or deflect suspicion if you are the impostor.
+                    Here is what has been said so far in the discussion:\n```"""
+                    + (
+                        "\n".join(
+                            [f"{d['player']}: {d['message']}" for d in current_discussion]
+                        ) 
+                        if current_discussion
+                        else " No one has spoken yet."
+                    ) + """\n```
+                    What do you say next to influence the discussion?
+                """,
                 model_output_type=DiscussionResponse,
             )
 

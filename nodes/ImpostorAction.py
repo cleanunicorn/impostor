@@ -1,5 +1,6 @@
 from pocketflow import Node
 from pydantic import BaseModel
+from textwrap import dedent
 from utils.call_llm import call_llm
 
 
@@ -14,7 +15,6 @@ class ImpostorAction(Node):
         }
 
     def exec(self, data):
-        # Human is player A
         impostor_actions = []
 
         alive_crew = [
@@ -28,19 +28,16 @@ class ImpostorAction(Node):
                 continue
 
             #
-            prompt = (
-                """
+            prompt = dedent("""
                 You are an impostor in a game similar to Mafia (party game). 
-                Your goal is to eliminate all crew members without being caught. 
-                You can only choose to kill one crew member per turn.
+                Your goal is to eliminate crew members without being caught. 
 
                 Live crew members:
                 """
                 + ", ".join([c["name"] for c in alive_crew])
                 + """
                 Choose one crew member to kill from the list above.
-            """
-            )
+            """)
             response = call_llm(
                 prompt=prompt,
                 model_output_type=KillResponse,
