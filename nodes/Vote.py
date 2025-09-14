@@ -70,7 +70,14 @@ class Vote(Node):
             vote_count[voted_player] += 1
 
         # Determine the player with the highest votes
-        player_to_kill = max(vote_count, key=vote_count.get)
+        sorted_votes = sorted(
+            vote_count.items(), key=lambda item: item[1], reverse=True
+        )
+        if sorted_votes[0][1] == sorted_votes[1][1]:
+            print("It's a tie! No player is killed this round.")
+            return
+
+        player_to_kill = sorted_votes[0][0]
         for p in shared["players"]:
             if p["name"] == player_to_kill:
                 print(f"Player killed based on votes: {p['name']} ({p['role']})")

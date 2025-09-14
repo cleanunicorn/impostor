@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from utils.call_llm import call_llm
 from textwrap import dedent
 
+
 class DiscussionResponse(BaseModel):
     message: str
 
@@ -39,19 +40,20 @@ class Discuss(Node):
             response = call_llm(
                 system_prompt=system_prompt,
                 prompt=f"""
-                    You are {p["name"]}, your role is {'impostor' if p['role'] == 'impostor' else 'crew'}.
+                    You are {p["name"]}, your role is {"impostor" if p["role"] == "impostor" else "crew"}.
                     You may talk freely, share suspicions, defend yourself, or accuse others.
                     All players alive: {", ".join([pl["name"] for pl in alive_players if pl["name"] != p["name"]])}.
                     Convince the other players of your innocence if you are crew, or deflect suspicion if you are the impostor.
                     Here is what has been said so far in the discussion:\n```"""
-                    + (
-                        "\n".join(
-                            [f"{d['player']}: {d['message']}" for d in current_discussion]
-                        ) 
-                        if current_discussion
-                        else " No one has spoken yet."
-                    ) + """\n```
-                    What do you say next to influence the discussion?
+                + (
+                    "\n".join(
+                        [f"{d['player']}: {d['message']}" for d in current_discussion]
+                    )
+                    if current_discussion
+                    else " No one has spoken yet."
+                )
+                + """\n```
+                    What do you say next to influence the discussion? Be brief and to the point.
                 """,
                 model_output_type=DiscussionResponse,
             )

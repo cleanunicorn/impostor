@@ -28,7 +28,8 @@ class ImpostorAction(Node):
                 continue
 
             #
-            prompt = dedent("""
+            prompt = dedent(
+                """
                 You are an impostor in a game similar to Mafia (party game). 
                 Your goal is to eliminate crew members without being caught. 
 
@@ -37,7 +38,8 @@ class ImpostorAction(Node):
                 + ", ".join([c["name"] for c in alive_crew])
                 + """
                 Choose one crew member to kill from the list above.
-            """)
+            """
+            )
             response = call_llm(
                 prompt=prompt,
                 model_output_type=KillResponse,
