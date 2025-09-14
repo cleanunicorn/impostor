@@ -3,7 +3,6 @@ import random
 from faker import Faker
 
 
-
 def generate_player_names(count=None):
     fake = Faker()
     names = set()
