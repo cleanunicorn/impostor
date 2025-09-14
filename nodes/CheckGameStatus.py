@@ -14,14 +14,6 @@ class CheckGameStatus(Node):
         ]
         crew = [p for p in players if p["role"] == "crew" and p["status"] == "alive"]
 
-        status = ""
-        if len(impostors) == 0:
-            status = "crew_wins"
-        elif len(impostors) >= len(crew):
-            status = "impostor_wins"
-        else:
-            status = "continue_game"
-
         print("=============================")
         print(f"Players: {[p['name'] for p in players if p['status'] == 'alive']}")
 

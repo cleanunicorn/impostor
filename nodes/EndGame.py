@@ -16,12 +16,12 @@ class EndGame(Node):
                 f"Live crew: {[p['name'] for p in data['players'] if p['role'] == 'crew' and p['status'] == 'alive']}"
             )
         elif data["game_status"] == "impostor_wins":
-            print("Impostor wins!")
+            print("Impostors win!")
             print(
                 f"Live impostors: {[p['name'] for p in data['players'] if p['role'] == 'impostor' and p['status'] == 'alive']}"
             )
         else:
-            print("Game continues.")
+            print("???")
 
     def post(self, shared, _prep_res, _exec_res):
         pass

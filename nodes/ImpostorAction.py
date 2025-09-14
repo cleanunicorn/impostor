@@ -15,8 +15,6 @@ class ImpostorAction(Node):
 
     def exec(self, data):
         # Human is player A
-        print("It's the impostor's turn to act.")
-
         impostor_actions = []
 
         alive_crew = [
@@ -85,5 +83,5 @@ class ImpostorAction(Node):
         for p in shared["players"]:
             if p["name"] == player_to_kill:
                 p["status"] = "dead"
-                print(f"{p['name']} has been killed!")
+                print(f"Impostors killed {p['name']}!")
                 break

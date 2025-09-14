@@ -17,7 +17,8 @@ class Discuss(Node):
         players = data["players"]
         alive_players = [p for p in players if p["status"] == "alive"]
 
-        print("Discussion phase:")
+        print("Discussion phase")
+        print("----------------")
         print(f"Alive players: {[p['name'] for p in alive_players]}")
 
         current_discussion = []
@@ -55,10 +56,10 @@ Other alive players: {", ".join([pl["name"] for pl in alive_players if pl["name"
                 system_prompt += f"{d['player']}: {d['message']}\n"
 
             system_prompt += f"""```\n
-                You are {p['name']}, a player in a game similar to Mafia or Werewolf. 
+                You are {p["name"]}, a player in a game similar to Mafia or Werewolf. 
             """
 
-            # You are currently {'an **Impostor**' if p['role'] == 'impostor' else 'a **Crew member**'}. 
+            # You are currently {'an **Impostor**' if p['role'] == 'impostor' else 'a **Crew member**'}.
             # You will never reveal your role if you are an Impostor.
 
             response = call_llm(
@@ -82,10 +83,8 @@ What do you say next? Keep it brief. Persuade others to benefit your role.
                 model_output_type=DiscussionResponse,
             )
 
-            print(system_prompt)
-            print("-----")
             print(f"{p['name']} says:")
-            print(response)
+            print(response.message)
 
             current_discussion.append(
                 {"player": p["name"], "message": response.message}
@@ -94,5 +93,4 @@ What do you say next? Keep it brief. Persuade others to benefit your role.
         return current_discussion
 
     def post(self, shared, _prep_res, discussion):
-        print(discussion)
-        exit(0)
+        shared["discussion"] = discussion

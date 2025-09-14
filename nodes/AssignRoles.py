@@ -1,5 +1,15 @@
 from pocketflow import Node
 import random
+from faker import Faker
+
+
+
+def generate_player_names(count=None):
+    fake = Faker()
+    names = set()
+    while len(names) < count:
+        names.add(fake.first_name())
+    return list(names)
 
 
 class AssignRoles(Node):
@@ -13,10 +23,11 @@ class AssignRoles(Node):
         player_count = data["player_count"]
         players = []
 
+        available_names = generate_player_names(player_count)
         for i in range(player_count):
             players.append(
                 {
-                    "name": chr(65 + i).capitalize(),
+                    "name": available_names[i],
                     "role": "crew",
                     "status": "alive",
                 }

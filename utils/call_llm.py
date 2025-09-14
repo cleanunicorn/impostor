@@ -27,9 +27,7 @@ def call_llm(prompt, model=None, model_output_type=None, system_prompt=None):
             response_format=model_output_type,
         )
     else:
-        r = client.chat.completions.create(
-            model=model, messages=messages
-        )
+        r = client.chat.completions.create(model=model, messages=messages)
 
     result = r.choices[0].message
     if hasattr(result, "parsed"):

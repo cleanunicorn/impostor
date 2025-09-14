@@ -12,9 +12,9 @@ def main():
 @click.option(
     "--players",
     required=False,
-    default=4,
+    default=10,
     type=int,
-    help="Number of players in the game (default: 4).",
+    help="Number of players in the game.",
 )
 def start(players):
     """Start the impostor game."""

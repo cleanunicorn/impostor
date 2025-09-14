@@ -5,6 +5,7 @@ from nodes.CheckGameStatus import CheckGameStatus
 from nodes.EndGame import EndGame
 from nodes.ImpostorAction import ImpostorAction
 from nodes.Discuss import Discuss
+from nodes.Vote import Vote
 
 
 def create_flow_impostor() -> Flow:
@@ -12,13 +13,9 @@ def create_flow_impostor() -> Flow:
 
     assign_roles = AssignRoles()
     check_game_status = CheckGameStatus()
-    # - crew wins
-    # - impostor wins
-    # - continue game
     impostor_action = ImpostorAction()
     discuss = Discuss()
-    # vote = Vote()
-    # kill voted player
+    vote = Vote()
     end_game = EndGame()
 
     assign_roles >> check_game_status
@@ -28,7 +25,7 @@ def create_flow_impostor() -> Flow:
     (
         impostor_action
         >> discuss
-        # >> vote
+        >> vote
         # >> kill_player
         >> check_game_status
     )
