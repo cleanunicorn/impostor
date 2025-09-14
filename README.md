@@ -22,6 +22,8 @@ Impostor is a Python-based party game simulation similar to Mafia/Werewolf where
 
 ## Installation
 
+The project now uses the `uv` command-line tool to manage setup and execution. Once your virtual environment is active and dependencies are installed, you can use the following commands:
+
 1. **Clone the repository:**
     ```sh
     git clone https://github.com/cleanunicorn/impostor.git
@@ -30,28 +32,13 @@ Impostor is a Python-based party game simulation similar to Mafia/Werewolf where
     ```sh
     cd impostor
     ```
-3. **Create and activate a virtual environment:**
+3. **Set up the project:**
     ```sh
-    python -m venv .venv
-    source .venv/bin/activate  # On Windows, use .venv\Scripts\activate
+    uv sync
     ```
-4. **Install dependencies:**
+4. **Launch the game:**
     ```sh
-    pip install -r requirements.txt
-    ```
-    *Alternatively, use `pip install .` if the project supports it via [pyproject.toml](http://_vscodecontentref_/0).*
-
-## Setup and Running the Game with `uv`
-
-The project now uses the `uv` command-line tool to manage setup and execution. Once your virtual environment is active and dependencies are installed, you can use the following commands:
-
-1. **Set up the project:**
-    ```sh
-    uv setup
-    ```
-2. **Launch the game:**
-    ```sh
-    uv start --players 6 --add-human --impostors 1
+    uv run ./main.py --players 6 --add-human --impostors 1
     ```
     - `--players`: Number of players in the game.
     - `--add-human`: Include at least one human player.
