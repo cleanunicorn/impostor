@@ -27,7 +27,37 @@ class ImpostorAction(Node):
             if p["role"] != "impostor":
                 continue
 
-            #
+            # Human Impostor
+            if p["type"] == "human":
+                print("==============================")
+                print(
+                    f"You are the impostor {p['name']}. Choose one crew member to kill from the list below:"
+                )
+                for idx, crew in enumerate(alive_crew):
+                    print(f"{idx + 1}. {crew['name']}")
+                while True:
+                    try:
+                        choice = int(
+                            input(
+                                f"Enter the number of the crew member to kill (1-{len(alive_crew)}): "
+                            )
+                        )
+                        if 1 <= choice <= len(alive_crew):
+                            player_to_kill = alive_crew[choice - 1]["name"]
+                            impostor_actions.append(
+                                {
+                                    "impostor": p["name"],
+                                    "kill": player_to_kill,
+                                }
+                            )
+                            break
+                        else:
+                            print("Invalid choice. Please try again.")
+                    except ValueError:
+                        print("Invalid input. Please enter a number.")
+                continue
+
+            # AI Impostor
             prompt = dedent(
                 """
                 You are an impostor in a game similar to Mafia (party game). 

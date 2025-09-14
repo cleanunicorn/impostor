@@ -30,6 +30,17 @@ class Discuss(Node):
         random.shuffle(alive_players)
 
         for p in alive_players:
+            # Human
+            if p["type"] == "human":
+                print("==============================")
+                print(
+                    f"You are {p['name']} ({p['role']}). It's your turn to speak in the discussion. What do you say?"
+                )
+                message = input("Your message: ")
+                current_discussion.append({"player": p["name"], "message": message})
+                continue
+
+            # AI
             system_prompt = dedent(f"""
                 Act like you are a player in a party game very similar to Mafia (also known as Werewolf).  
                 Your objective is to fully immerse yourself in the game role, simulate the thought process of a real player, and act accordingly. Be vivid, strategic, and dynamic in your reasoning.  

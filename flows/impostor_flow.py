@@ -22,13 +22,8 @@ def create_flow_impostor() -> Flow:
     check_game_status - "impostor_wins" >> end_game
     check_game_status - "crew_wins" >> end_game
     check_game_status - "continue_game" >> impostor_action
-    (
-        impostor_action
-        >> discuss
-        >> vote
-        # >> kill_player
-        >> check_game_status
-    )
+
+    (impostor_action >> discuss >> vote >> check_game_status)
 
     flow = Flow(start=assign_roles)
 

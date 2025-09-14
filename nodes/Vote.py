@@ -27,8 +27,40 @@ class Vote(Node):
 
         # Collect votes from each alive player
         for player in alive_players:
+            # Human
+            if player["type"] == "human":
+                print("==============================")
+                print(
+                    f"You are {player['name']} ({player['role']}). It's your turn to vote. Who do you think is the impostor?"
+                )
+                print("Alive players:")
+                for idx, p in enumerate(alive_players):
+                    print(f"{idx + 1}. {p['name']}")
+                while True:
+                    try:
+                        choice = int(
+                            input(
+                                f"Enter the number of the player you want to vote for (1-{len(alive_players)}): "
+                            )
+                        )
+                        if 1 <= choice <= len(alive_players):
+                            voted_player = alive_players[choice - 1]["name"]
+                            current_votes.append(
+                                {
+                                    "player": player["name"],
+                                    "voted": voted_player,
+                                }
+                            )
+                            break
+                        else:
+                            print("Invalid choice. Please try again.")
+                    except ValueError:
+                        print("Invalid input. Please enter a number.")
+                continue
+
+            # AI
             prompt = f"""
-            You are {player["name"]}.
+            You are {player["name"]} ({player["role"]}).
             This is the discussion previous to the vote:
             """
             for d in data["discussion"]:
@@ -73,9 +105,10 @@ class Vote(Node):
         sorted_votes = sorted(
             vote_count.items(), key=lambda item: item[1], reverse=True
         )
-        if sorted_votes[0][1] == sorted_votes[1][1]:
-            print("It's a tie! No player is killed this round.")
-            return
+        if len(sorted_votes) > 1:
+            if sorted_votes[0][1] == sorted_votes[1][1]:
+                print("It's a tie! No player is killed this round.")
+                return
 
         player_to_kill = sorted_votes[0][0]
         for p in shared["players"]:

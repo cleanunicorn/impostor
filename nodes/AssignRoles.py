@@ -15,6 +15,8 @@ class AssignRoles(Node):
     def prep(self, shared):
         return {
             "player_count": shared["player_count"],
+            "impostors": shared["impostors"],
+            "add_human": shared["add_human"],
         }
 
     def exec(self, data):
@@ -28,12 +30,22 @@ class AssignRoles(Node):
                     "name": available_names[i],
                     "role": "crew",
                     "status": "alive",
+                    "type": "ai",
                 }
             )
 
-        # Assign one impostor randomly
-        impostor = random.randint(0, player_count - 1)
-        players[impostor]["role"] = "impostor"
+        # Assign impostors randomly
+        for _ in range(data["impostors"]):
+            while True:
+                impostor = random.randint(0, player_count - 1)
+                if players[impostor]["role"] != "impostor":
+                    players[impostor]["role"] = "impostor"
+                    break
+
+        # Assign humans randomly
+        if data["add_human"]:
+            human = random.randint(0, player_count - 1)
+            players[human]["type"] = "human"
 
         return players
 
